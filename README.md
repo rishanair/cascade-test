@@ -95,3 +95,44 @@ Playhead: A separate div is used to create the red playhead. Its left style prop
 
 
 
+MILESTONE 2: Clip Drag & Drop
+
+--- Logic for Dragging Clips ---
+
+1. When you press mouse down on a clip:
+
+Store which clip is being dragged.
+
+Store the initial mouse X position.
+
+Store the clip’s original start position.
+
+2. When you move the mouse:
+
+Calculate how far the mouse moved (deltaX).
+
+Convert deltaX → seconds (deltaX / pixelsPerSecond).
+
+Update that clip’s start time in state.
+
+3. When you release mouse (mouseup):
+
+Stop dragging.
+
+Clip position is saved in state.
+
+4. Constraints:
+
+Clip cannot go before 0.
+
+Clip cannot overlap another clip on the same track.
+
+Clip cannot go beyond total timeline length.
+
+5. Event Listeners
+   
+The handlers are attached globally while dragging.
+
+Ensures dragging works even if the mouse leaves the timeline area.
+
+
