@@ -1,9 +1,17 @@
-import { AbsoluteFill } from "remotion";
+import { AbsoluteFill, Audio } from "remotion";
 
-export function HelloWorld({title}) {
-   return (
-     <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', fontSize: 50, backgroundColor: 'white'}}>
-        <h1 style={{color: 'black'}}>{title}</h1>
-      </AbsoluteFill>
-    );
+export function HelloWorld({ title }) {
+  return (
+    <AbsoluteFill
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+        background: "black",
+      }}
+    >
+      <h1 style={{ color: "white" }}>{title}</h1>
+      {/* Audio plays along with video */}
+      <Audio src="/audio.mp3" />
+    </AbsoluteFill>
+  );
 }
