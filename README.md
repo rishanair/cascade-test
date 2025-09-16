@@ -136,3 +136,40 @@ The handlers are attached globally while dragging.
 Ensures dragging works even if the mouse leaves the timeline area.
 
 
+MILESTONE 3: SLICING CLIPS
+
+1. Detecting the "S" Key:
+   
+A keydown event listener is set up in a useEffect.
+
+When you press "S" (case-insensitive) and your mouse is hovering over a clip, the slicing logic runs.
+
+
+2. Finding the Clip to Slice:
+   
+It looks up the clip you’re hovering over using its id:
+const clip = prev.videoTracks.find(c => c.id === hoveredClipId);
+if (!clip) return prev;
+
+3. Checking Playhead Position:
+   
+It checks if the playhead is inside the clip (not at the very start or end):
+if (playhead > clip.start && playhead < clip.start + clip.duration) {
+  // ...do the slice...
+}
+
+4. Creating Two New Clips:
+   
+If the playhead is inside, it creates two new clips:
+
+The first goes from the original start to the playhead.
+The second goes from the playhead to the original end.
+
+5. Updating the Timeline:
+   
+It removes the old clip and adds the two new ones, keeping the timeline sorted.
+
+In short:
+Slicing lets you break a clip into two parts at the playhead, making it easy to edit your timeline!
+
+
