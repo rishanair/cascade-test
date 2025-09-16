@@ -5,11 +5,10 @@ import {HelloWorld} from '../components/HelloWorld';
 export default function Home() {
   const [timeline, setTimeline] = useState({
     videoTracks: [
-      {id: 1, name: "Clip1", start: 0, duration: 5},
-      {id: 2, name: "Clip2", start: 6, duration: 3}, // note: not overlapping
+      {id: 1, name: "Clip1", start: 0, duration: 10},
     ],
     audioTrack: [
-      {id: "a1", name: "Music", start: 0, duration: 10}
+      {id: "a1", name: "Music", start: 0, duration: 15}
     ],
   });
 
@@ -19,8 +18,11 @@ export default function Home() {
   const [currentTime, setCurrentTime] = useState(0);
   const playerRef = useRef(null);
 
-  // For dragging
+  // Dragging state
   const [dragging, setDragging] = useState(null);
+
+  // Hover state (to know which clip mouse is on)
+  const [hoveredClipId, setHoveredClipId] = useState(null);
 
   const handleTimelineClick = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -41,6 +43,7 @@ export default function Home() {
     });
   };
 
+  // --- DRAGGING LOGIC ---
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (!dragging) return;
@@ -81,9 +84,7 @@ export default function Home() {
     };
 
     const handleMouseUp = () => {
-      if (dragging) {
-        setDragging(null);
-      }
+      if (dragging) setDragging(null);
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -94,6 +95,49 @@ export default function Home() {
       window.removeEventListener("mouseup", handleMouseUp);
     };
   }, [dragging]);
+
+  // --- SLICING LOGIC ---
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key.toLowerCase() === "s" && hoveredClipId !== null) {
+        setTimeline(prev => {
+          const clip = prev.videoTracks.find(c => c.id === hoveredClipId);
+          if (!clip) return prev;
+
+          const playhead = currentTime;
+
+          // Only slice if playhead is inside clip boundaries
+          if (playhead > clip.start && playhead < clip.start + clip.duration) {
+            const firstClip = {
+              id: Date.now(), // unique id
+              name: clip.name + "-part1",
+              start: clip.start,
+              duration: playhead - clip.start,
+            };
+            const secondClip = {
+              id: Date.now() + 1,
+              name: clip.name + "-part2",
+              start: playhead,
+              duration: clip.start + clip.duration - playhead,
+            };
+
+            return {
+              ...prev,
+              videoTracks: prev.videoTracks
+                .filter(c => c.id !== clip.id) // remove old one
+                .concat([firstClip, secondClip]) // add new ones
+                .sort((a, b) => a.start - b.start) // keep order
+            };
+          }
+
+          return prev;
+        });
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [hoveredClipId, currentTime]);
 
   return (
     <div style={{height: "100vh", display: "flex", flexDirection: "column"}}>
@@ -124,10 +168,13 @@ export default function Home() {
         {/* Video Clips */}
         <div style={{position: "relative", height: "60px"}}>
           {timeline.videoTracks.map(clip => (
-            <div key={clip.id}
+            <div
+              key={clip.id}
               onMouseDown={(e) => handleMouseDown(clip, e)}
+              onMouseEnter={() => setHoveredClipId(clip.id)}
+              onMouseLeave={() => setHoveredClipId(null)}
               style={{
-                background: "skyblue",
+                background: hoveredClipId === clip.id ? "orange" : "skyblue",
                 position: "absolute",
                 left: `${clip.start * pixelsPerSecond}px`,
                 width: `${clip.duration * pixelsPerSecond}px`,
