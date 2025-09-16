@@ -1,43 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+Cascade Studios Frontend Test
+--- Overview ---
 
-## Getting Started
+This project is a simplified interactive video timeline editor built with Next.js and Remotion.
+It demonstrates handling of complex state, drag-and-drop, clip slicing, and audio-video synchronization.
 
-First, run the development server:
+--- Features ---
 
-```bash
+1. Remotion Video Player with playback controls
+2. Timeline UI for video clips
+3. Red Playhead that moves during playback & syncs with video
+4. Click Timeline to Seek (jump playhead + video)
+5. Drag & Drop Clips (with collision detection & boundary limits)
+6. Slice Clips by pressing S while hovering over a clip
+7. Audio Track (visualized as a green bar + Remotion <Audio /> playback in sync)
+
+--- Tech Stack ---
+
+Next.js – Project setup & page routing
+
+React Hooks – State management (useState, useEffect, useRef)
+
+Remotion – Video & audio rendering (<Player>, <Audio>)
+
+Drag Events – Implemented with mousedown → mousemove → mouseup
+
+--- Project Structure ---
+cascade-test/
+├── components/
+│   ├── HelloWorld.js    # Video composition + audio playback
+│   └── Timeline.js      # Timeline UI (clips, audio track, playhead)
+├── pages/
+│   └── index.js         # Main page with state management
+├── public/
+│   └── audio.mp3        # Royalty-free test audio file
+
+▶️ How to Run Locally
+
+Clone the repo:
+
+git clone https://github.com/<your-username>/cascade-test.git
+cd cascade-test
+
+
+Install dependencies:
+
+npm install
+
+
+Start dev server:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+App runs at: http://localhost:3000
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+--- Audio File ---
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+Place a royalty-free audio.mp3 inside the public/ folder.
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+--- Evaluation Notes ---
 
-## Learn More
+Code is cleanly structured into components (Timeline, HelloWorld).
 
-To learn more about Next.js, take a look at the following resources:
+State updates are immutable.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+Dragging logic avoids overlaps and enforces timeline bounds.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+Clear demonstration of problem-solving & React best practices.
 
 
 *** How the code works: ***
@@ -172,4 +201,15 @@ It removes the old clip and adds the two new ones, keeping the timeline sorted.
 In short:
 Slicing lets you break a clip into two parts at the playhead, making it easy to edit your timeline!
 
+MILESTONE 4: AUDIO TRACK SYNC 
+
+1. Put an MP3 File
+
+2. Add Remotion Audio inside the composition
+
+3. create Timeline.js -> This separates timeline logic → clips + audio track.
+
+4. code is modular (HelloWorld, Timeline, Home), easy to read.
+
+   
 
